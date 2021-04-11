@@ -12,11 +12,13 @@ public class Player : MonoBehaviour
     [Header("Lives")]
     [SerializeField] public int currentLives = 3;
     [SerializeField] public int currentPoints = 0;
+    private float maxWidth;
 
     // Start is called before the first frame update
     void Start()
-    {
+    {       
         rb = GetComponent<Rigidbody2D>();
+        maxWidth = Camera.main.aspect * Camera.main.orthographicSize;
 
     }
 
@@ -24,6 +26,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         movement = Input.GetAxis("Horizontal") * movementSpeed;
+        CameraPosition();
     }
 
     private void FixedUpdate()
@@ -36,5 +39,18 @@ public class Player : MonoBehaviour
         speed = rb.velocity;
         speed.x = movement;
         rb.velocity = speed;
+    }
+
+    private void CameraPosition()
+    {
+        if (transform.position.x < -maxWidth)
+        {
+            transform.position = new Vector2(maxWidth, transform.position.y);
+        }
+
+        if (transform.position.x > maxWidth)
+        {
+            transform.position = new Vector2(-maxWidth, transform.position.y);
+        }
     }
 }
